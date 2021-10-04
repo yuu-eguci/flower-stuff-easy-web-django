@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%_m264bet1^32*764n-p+&d^^d(y3&28)ls460@rs%rf4fhyr$'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'widget_tweaks',
     'app',
 ]
 
@@ -132,3 +131,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # NOTE:画像をアップロードするファイルを指定。
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# アプリケーションのための定数を定義します。
+APP_HDF5_DRIVE_ID = os.environ['APP_HDF5_DRIVE_ID']
+APP_HDF5_VERSION = os.environ['APP_HDF5_VERSION']
+APP_HDF5_PATH_IN_APP = './app/hdf5.hdf5'
+APP_PINCODE = os.environ['APP_PINCODE']
+# Prediction に利用する定数です。
+APP_INCEPTION_V3_TARGET_SIZE = (299, 299)
+APP_CLASSES_FOR_N_FLOWERS = sorted([
+    'Anthurium',
+    'Bluebell',
+    'Buttercup',
+    'ColtsFoot',
+    'Cowslip',
+    'Crocus',
+    'Daffodil',
+    'Daisy',
+    'Dandelion',
+    'Fritillary',
+    'Hydrangea',
+    'Iris',
+    'LilyValley',
+    'Pansy',
+    'Snowdrop',
+    'Sunflower',
+    'Tigerlily',
+    'Tulip',
+    'Windflower',
+])
