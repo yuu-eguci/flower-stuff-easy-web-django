@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django-widget-tweaks = "~=1.4.8"
+gunicorn = "~=20.1.0"
+Django = "~=3.2.5"
+Pillow = "~=8.2.0"
+python-dotenv = "*"
+requests = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

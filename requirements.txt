@@ -1,0 +1,10 @@
+Django~=3.2.5
+Pillow~=8.2.0
+django-widget-tweaks~=1.4.8
+gunicorn~=20.1.0
+python-dotenv
+requests
+# whitenoise
+# mysqlclient
+# django-heroku
+# # dj-database-url
