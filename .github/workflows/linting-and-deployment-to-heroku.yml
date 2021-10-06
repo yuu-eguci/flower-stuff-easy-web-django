@@ -26,3 +26,15 @@ jobs:
       # - name: Test with pytest
       #   run: |
       #     pytest
+
+  deployment-job:
+    # lint を通過していないコードはデプロイさせません。
+    needs: linting-job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}  # required
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}  # required
+          heroku_email: ${{secrets.HEROKU_EMAIL}}  # required
