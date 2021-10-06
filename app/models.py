@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 # プロフィールモデルの作成。
 class Profile(models.Model):
