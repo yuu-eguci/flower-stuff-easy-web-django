@@ -69,7 +69,8 @@ jobs:
           path: .
       # Azure login
       # NOTE: CREDENTIALS は Deploy to Azure 拡張機能で自動生成してもらったものです。
-      - uses: azure/login@v1
+      - name: Log in to Azure CLI
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.flower_stuff_easy_web_django_ba83 }}
 
@@ -82,19 +83,19 @@ jobs:
         uses: Azure/appservice-settings@v1
         with:
           app-name: flower-stuff-easy-web-django
-          mask-inputs: false
-          general-settings-json: '{"linuxFxVersion": "PYTHON|3.8"}' #'General configuration settings as Key Value pairs'
+          # いつもは POST_BUILD_COMMAND で migration を行っているが、
+          # 今回は DB 不要のプロジェクトなので空欄です。
           app-settings-json: '[
             { "name": "DISABLE_COLLECTSTATIC", "value": "true" },
+            { "name": "POST_BUILD_COMMAND",  "value": "" },
             { "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "true" },
             { "name": "DJANGO_ENV", "value": "production"}
           ]'
       # deploy web app
-      - uses: azure/webapps-deploy@v2
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v2
         with:
           app-name: flower-stuff-easy-web-django
-          package: .
-          startup-command: AZURE_CREDENTIALS
       # Azure logout
       - name: logout
         run: |
