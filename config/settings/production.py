@@ -1,5 +1,5 @@
 # AppService 環境用の設定。
-from .base import *
+from .base import *  # noqa: F403, F401
 import os
 
 DEBUG = False
