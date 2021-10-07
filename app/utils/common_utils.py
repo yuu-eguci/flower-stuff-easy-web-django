@@ -6,7 +6,6 @@ Python やるときにいつもあって欲しい自分用モジュールです�
 # Built-in modules.
 import logging
 import datetime
-import sys
 
 # Third-party modules.
 import pytz
@@ -30,7 +29,7 @@ def get_my_logger(logger_name: str) -> logging.Logger:
     # ルートロガーのログレベルは DEBUG。
     logger.setLevel(logging.DEBUG)
     # コンソールへ出力するハンドラを作成。
-    handler = logging.StreamHandler(stream=sys.stdout)
+    handler = logging.StreamHandler()
     # ハンドラもログレベルを持ちます。
     handler.setLevel(logging.DEBUG)
     # ログフォーマットをハンドラに設定します。
