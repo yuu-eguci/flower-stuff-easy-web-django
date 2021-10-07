@@ -27,6 +27,13 @@ def index(request):
 
 class StatusView(View):
     def get(self, request):
+        print('StatusView.get from print')
+        logger.debug('でばーぐ from logger')
+        logger.info('いんーふぉ from logger')
+        logger.warning('うぉーにん from logger')
+        logger.error('えろあ from logger')
+        logger.fatal('ふぇーたる(critical と同じっぽい) from logger')
+        logger.critical('くりてぃこぉ from logger')
         try:
             # 手元に hdf5 が存在することを ready=true と解釈します。
             data = dict(
