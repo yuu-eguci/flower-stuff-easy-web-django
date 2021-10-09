@@ -1,5 +1,6 @@
 # Built-in modules.
 import os
+import json
 
 # Third-party modules.
 
@@ -50,13 +51,15 @@ class StatusView(View):
 class VerifyPincodeView(View):
     def post(self, request):
         try:
+            # WARN: request.POST は json のやり取りには使えません。
+            body_dict = json.loads(request.body)
             # 必須パラメータをチェックします。 pincode がなければ BadRequest です。
-            if 'pincode' not in request.POST:
+            if 'pincode' not in body_dict:
                 return HttpResponseBadRequest('pincode is required.')
 
             # pincode をチェックします。
             data = dict(
-                verification_succeeded=request.POST['pincode'] == settings.APP_PINCODE,
+                verification_succeeded=body_dict['pincode'] == settings.APP_PINCODE,
             )
             return JsonResponse(data=data)
         except Exception:
@@ -69,12 +72,14 @@ class VerifyPincodeView(View):
 class PredictImageView(View):
     def post(self, request):
         try:
+            # WARN: request.POST は json のやり取りには使えません。
+            body_dict = json.loads(request.body)
             # 必須パラメータをチェックします。必須パラメータがなければ BadRequest です。
-            if 'base64image' not in request.POST:
+            if 'base64image' not in body_dict:
                 return HttpResponseBadRequest('base64image is required.')
 
             # Prediction を行います。
-            prediction = prediction_utils.predict_base64image(request.POST['base64image'])
+            prediction = prediction_utils.predict_base64image(body_dict['base64image'])
 
             # Prediction の結果を、 json 用に整形します。
             def for_json(tuple_: tuple) -> dict:
