@@ -23,18 +23,13 @@ logger = common_utils.get_my_logger(__name__)
 
 # NOTE:app/index.htmlが呼び出されるリターンされる。
 def index(request):
+    logger.info('Access log: index')
     return HttpResponse('top')
 
 
 class StatusView(View):
     def get(self, request):
-        print('StatusView.get from print')
-        logger.debug('でばーぐ from logger')
-        logger.info('いんーふぉ from logger')
-        logger.warning('うぉーにん from logger')
-        logger.error('えろあ from logger')
-        logger.fatal('ふぇーたる(critical と同じっぽい) from logger')
-        logger.critical('くりてぃこぉ from logger')
+        logger.info('Access log: StatusView.get')
         try:
             # 手元に hdf5 が存在することを ready=true と解釈します。
             data = dict(
@@ -50,6 +45,7 @@ class StatusView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class VerifyPincodeView(View):
     def post(self, request):
+        logger.info('Access log: VerifyPincodeView.post')
         try:
             # WARN: request.POST は json のやり取りには使えません。
             body_dict = json.loads(request.body)
@@ -71,6 +67,7 @@ class VerifyPincodeView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class PredictImageView(View):
     def post(self, request):
+        logger.info('Access log: PredictImageView.post')
         try:
             # WARN: request.POST は json のやり取りには使えません。
             body_dict = json.loads(request.body)
