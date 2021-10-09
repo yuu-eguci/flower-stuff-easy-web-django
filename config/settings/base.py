@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # NOTE: 今回は API サーバとして機能させるので、 staticfiles は不要です。
     # 'django.contrib.staticfiles',
     'app',
+    'corsheaders',
 ]
 
 ROOT_URLCONF = 'config.urls'

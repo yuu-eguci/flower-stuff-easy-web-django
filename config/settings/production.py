@@ -6,12 +6,13 @@ DEBUG = False
 
 # Configure the domain name using the environment variable
 # that Azure automatically creates for us.
-ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME'], 'yuu-eguci.github.io'
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']
                  ] if 'WEBSITE_HOSTNAME' in os.environ else []
 
 # WhiteNoise configuration
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     # Add whitenoise middleware after the security middleware
     # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -21,3 +22,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# CORS 許可する origin を記述します。
+CORS_ALLOWED_ORIGINS = [
+    'https://yuu-eguci.github.io',
+]
+CORS_ALLOW_CREDENTIALS = True
