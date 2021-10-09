@@ -21,12 +21,27 @@ from django.conf import settings
 logger = common_utils.get_my_logger(__name__)
 
 
+def trim_base64_header(base64string: str) -> str:
+
+    # ヘッダつきの場合、2要素取得されます。
+    splitted = base64string.split(',', 1)
+    if len(splitted) == 1:
+        # ヘッダがない場合、処理をする必要がありません。
+        return base64string
+    return splitted[1]
+
+
 def predict_base64image(base64image: str) -> dict:
+
+    # base64 の header は不要です。削除します。
+    # NOTE: header 入りの base64 データを base64.b64decode に投げると正しく decode できない。
+    base64image = trim_base64_header(base64image)
 
     # base64image を画像ファイルに変換します。
     # prediction 関数が実ファイルのパスを受け取るような設計になっているためです。
-    with open('temp_image', 'wb') as f:
-        f.write(base64.b64decode(base64image))
+    with open('./temp_image', 'wb') as f:
+        bytes_ = base64.b64decode(base64image)
+        f.write(bytes_)
 
     # モデルをロードします。
     model = tensorflow.keras.models.load_model(settings.APP_HDF5_PATH_IN_APP)
@@ -34,7 +49,7 @@ def predict_base64image(base64image: str) -> dict:
     # 画像を img_nad へ変換します。
     # NOTE: nad = Normalization and Division(正規化と割り算)
     img_nad = convert_image_for_prediction(
-        'temp_image',
+        './temp_image',
         target_image_size=settings.APP_INCEPTION_V3_TARGET_SIZE,
         color_mode='rgb',
         verbose=False,
@@ -44,7 +59,7 @@ def predict_base64image(base64image: str) -> dict:
     prediction = predict_top_classes(model, img_nad, settings.APP_CLASSES_FOR_N_FLOWERS, 3)
 
     # 画像ファイルを削除します。
-    os.remove('temp_image')
+    os.remove('./temp_image')
 
     return prediction
 
