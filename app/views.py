@@ -10,7 +10,7 @@ from app.utils import prediction_utils
 
 # from django.http import request
 from django.http import HttpResponse
-from django.http.response import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.http.response import JsonResponse
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -44,7 +44,7 @@ class StatusView(View):
         except Exception:
             # 例外は raise されず、スタックトレースだけ残します。
             logger.exception('Something went wrong in StatusView.get')
-            return HttpResponseServerError('Something went wrong.')
+            return JsonResponse(data={'message': 'Something went wrong.'}, status=500)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -55,7 +55,7 @@ class VerifyPincodeView(View):
             body_dict = json.loads(request.body)
             # 必須パラメータをチェックします。 pincode がなければ BadRequest です。
             if 'pincode' not in body_dict:
-                return HttpResponseBadRequest('pincode is required.')
+                return JsonResponse(data={'message': 'pincode is required.'}, status=400)
 
             # pincode をチェックします。
             data = dict(
@@ -65,7 +65,7 @@ class VerifyPincodeView(View):
         except Exception:
             # 例外は raise されず、スタックトレースだけ残します。
             logger.exception('Something went wrong in VerifyPincodeView.post')
-            return HttpResponseServerError('Something went wrong.')
+            return JsonResponse(data={'message': 'Something went wrong.'}, status=500)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -76,7 +76,7 @@ class PredictImageView(View):
             body_dict = json.loads(request.body)
             # 必須パラメータをチェックします。必須パラメータがなければ BadRequest です。
             if 'base64image' not in body_dict:
-                return HttpResponseBadRequest('base64image is required.')
+                return JsonResponse(data={'message': 'base64image is required.'}, status=400)
 
             # Prediction を行います。
             prediction = prediction_utils.predict_base64image(body_dict['base64image'])
@@ -99,4 +99,4 @@ class PredictImageView(View):
         except Exception:
             # 例外は raise されず、スタックトレースだけ残します。
             logger.exception('Something went wrong in PredictImageView.post')
-            return HttpResponseServerError('Something went wrong.')
+            return JsonResponse(data={'message': 'Something went wrong.'}, status=500)
