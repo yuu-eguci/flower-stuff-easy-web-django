@@ -1,6 +1,12 @@
 import base64
+import binascii
 import io
+import os
+import tempfile
 from pathlib import Path
+from unittest import mock
+
+import tensorflow
 
 from django.test import SimpleTestCase, override_settings
 from PIL import Image
@@ -40,3 +46,25 @@ class PredictBase64ImageTests(SimpleTestCase):
     def test_accepts_data_url(self):
         data_url = 'data:image/png;base64,' + make_base64_png()
         self.assert_legacy_model_prediction(prediction_utils.predict_base64image(data_url))
+
+    def test_does_not_leave_files_in_working_directory_on_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cwd = os.getcwd()
+            os.chdir(tmp)
+            self.addCleanup(os.chdir, cwd)
+            with self.assertRaises(Exception):
+                prediction_utils.predict_base64image(base64.b64encode(b'not an image').decode())
+            self.assertEqual(os.listdir(tmp), [])
+
+    def test_rejects_invalid_base64(self):
+        with self.assertRaises(binascii.Error):
+            prediction_utils.predict_base64image('not base64!')
+
+    def test_loads_model_only_once(self):
+        load_model = mock.Mock(wraps=tensorflow.keras.models.load_model)
+        with mock.patch('tensorflow.keras.models.load_model', load_model):
+            prediction_utils.load_model.cache_clear()
+            self.addCleanup(prediction_utils.load_model.cache_clear)
+            prediction_utils.predict_base64image(make_base64_png())
+            prediction_utils.predict_base64image(make_base64_png())
+        load_model.assert_called_once_with(str(LEGACY_MODEL_PATH))
