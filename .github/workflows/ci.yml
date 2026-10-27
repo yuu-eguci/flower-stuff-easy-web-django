@@ -20,3 +20,19 @@ jobs:
           python-version: '3.13'
       - run: pip install flake8==7.4.1
       - run: flake8 .
+
+  test:
+    runs-on: ubuntu-latest
+    container: python:3.8-slim-bookworm
+    env:
+      APP_HDF5_DRIVE_ID: dummy
+      APP_HDF5_VERSION: dummy
+      APP_PINCODE: dummy
+      DJANGO_SECRET_KEY: test-only-not-secret
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: pip install pipenv==2024.0.1
+      - run: pipenv install --deploy --system
+      - run: python manage.py test
