@@ -26,6 +26,7 @@ docker compose up --build
 - It uses `config.settings.local` (`DEBUG=True`), so use it for local development only.
 - `compose.yaml` sets dummy values for `APP_PINCODE` (`1234`) and `DJANGO_SECRET_KEY`. Override them with environment variables if needed.
 - Put the trained model at `app/hdf5.hdf5` before building. Without it, `/api/v1/status` returns `{"ready": false}` and prediction fails.
+- The model is loaded on the first prediction and reused after that. Restart the server after you replace `app/hdf5.hdf5`.
 
 `./scripts/docker-smoke-test.sh` builds and starts the container, then checks `manage.py check`, `/api/v1/status` and a prediction with the test model. CI runs it too.
 

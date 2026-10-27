@@ -3,8 +3,9 @@ Prediction に関連する utility functions を定義しています。
 """
 
 # Built-in modules.
-import os
 import base64
+import functools
+import io
 
 # Third-party modules.
 import tensorflow.keras
@@ -31,25 +32,29 @@ def trim_base64_header(base64string: str) -> str:
     return splitted[1]
 
 
+@functools.lru_cache(maxsize=1)
+def load_model(path: str):
+    # モデルの読み込みには時間がかかるため、一度読み込んだモデルを使い回します。
+    return tensorflow.keras.models.load_model(path)
+
+
 def predict_base64image(base64image: str) -> dict:
 
     # base64 の header は不要です。削除します。
     # NOTE: header 入りの base64 データを base64.b64decode に投げると正しく decode できない。
     base64image = trim_base64_header(base64image)
 
-    # base64image を画像ファイルに変換します。
-    # prediction 関数が実ファイルのパスを受け取るような設計になっているためです。
-    with open('./temp_image', 'wb') as f:
-        bytes_ = base64.b64decode(base64image)
-        f.write(bytes_)
+    # base64image をメモリ上の画像として読み込みます。
+    # 一時ファイルを使うと、同時に届いたリクエストが同じファイルを上書きするためです。
+    image_file = io.BytesIO(base64.b64decode(base64image))
 
     # モデルをロードします。
-    model = tensorflow.keras.models.load_model(settings.APP_HDF5_PATH_IN_APP)
+    model = load_model(settings.APP_HDF5_PATH_IN_APP)
 
     # 画像を img_nad へ変換します。
     # NOTE: nad = Normalization and Division(正規化と割り算)
     img_nad = convert_image_for_prediction(
-        './temp_image',
+        image_file,
         target_image_size=settings.APP_INCEPTION_V3_TARGET_SIZE,
         color_mode='rgb',
         verbose=False,
@@ -58,19 +63,16 @@ def predict_base64image(base64image: str) -> dict:
     # 予測を行います。
     prediction = predict_top_classes(model, img_nad, settings.APP_CLASSES_FOR_N_FLOWERS, 3)
 
-    # 画像ファイルを削除します。
-    os.remove('./temp_image')
-
     return prediction
 
 
-def convert_image_for_prediction(image_path: str,
+def convert_image_for_prediction(image_path: str | io.BytesIO,
                                  target_image_size: tuple,
                                  color_mode: str,
                                  verbose: bool) -> numpy.ndarray:
     """メチャクチャ苦労して、画像を prediction へ変換する処理を整理しました。
     Args:
-        image_path (str): 画像パス。
+        image_path (str | io.BytesIO): 画像パスまたはメモリ上の画像ファイル。
         target_image_size (tuple): 変換後の画像サイズ。
         color_mode (str): 'rgb', 'rgba', 'grayscale'
         verbose (bool): 途中のロギングを行う。

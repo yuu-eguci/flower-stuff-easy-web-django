@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir pipenv==2026.10.3
 COPY Pipfile Pipfile.lock ./
 RUN pipenv install --deploy --system && pip uninstall --yes pipenv
 
-RUN useradd --create-home app && chown app:app /app
+RUN useradd --create-home app
 COPY --chown=app:app . .
 USER app
 
