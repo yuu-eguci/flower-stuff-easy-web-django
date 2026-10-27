@@ -1,45 +1,41 @@
-absl-py==0.14.1
-asgiref==3.4.1
+-i https://pypi.org/simple
+absl-py==2.5.1; python_version >= '3.10'
+asgiref==3.13.0; python_version >= '3.11'
 astunparse==1.6.3
-cachetools==4.2.4
-certifi==2021.5.30
-charset-normalizer==2.0.6
-clang==5.0
-Django==3.2.7
-django-cors-headers==3.10.0
-flatbuffers==1.12
-gast==0.4.0
-google-auth==1.35.0
-google-auth-oauthlib==0.4.6
+certifi==2026.10.23; python_version >= '3.7'
+charset-normalizer==3.5.2; python_version >= '3.7'
+django==5.2.18; python_version >= '3.10'
+django-cors-headers==4.9.0; python_version >= '3.9'
+flatbuffers==25.12.19
+gast==0.7.0; python_version >= '2.7' and python_version != '3.0' and python_version != '3.1' and python_version != '3.2' and python_version != '3.3'
 google-pasta==0.2.0
 googledrivedownloader==0.4
-grpcio==1.41.0
-gunicorn==20.1.0
-h5py==3.1.0
-idna==3.2
-keras==2.6.0
-Keras-Preprocessing==1.1.2
-Markdown==3.3.4
-numpy==1.19.5
-oauthlib==3.1.1
-opt-einsum==3.3.0
-Pillow==8.3.2
-protobuf==3.18.0
-pyasn1==0.4.8
-pyasn1-modules==0.2.8
-pytz==2021.3
-requests==2.26.0
-requests-oauthlib==1.3.0
-rsa==4.7.2
-six==1.15.0
-sqlparse==0.4.2
-tensorboard==2.6.0
-tensorboard-data-server==0.6.1
-tensorboard-plugin-wit==1.8.0
-tensorflow==2.6.0
-tensorflow-estimator==2.6.0
-termcolor==1.1.0
-typing-extensions==3.7.4.3
-urllib3==1.26.7
-Werkzeug==2.0.1
-wrapt==1.12.1
+grpcio==1.85.0; python_version >= '3.10'
+gunicorn==26.2.0; python_version >= '3.10'
+h5py==3.14.0; python_version >= '3.9'
+idna==3.20; python_version >= '3.9'
+keras==3.15.1; python_version >= '3.11'
+libclang==18.1.1
+markdown-it-py==4.2.0; python_version >= '3.10'
+mdurl==0.1.2; python_version >= '3.7'
+ml-dtypes==0.6.0; python_version >= '3.10'
+namex==0.1.0
+numpy==2.5.4; python_version >= '3.12'
+opt-einsum==3.4.0; python_version >= '3.8'
+optree==0.20.0; python_version >= '3.9'
+packaging==26.3; python_version >= '3.9'
+pillow==13.0.0; python_version >= '3.11'
+protobuf==7.36.2; python_version >= '3.10'
+pygments==2.21.0; python_version >= '3.9'
+pytz==2026.5
+requests==2.34.2; python_version >= '3.10'
+rich==15.0.0; python_full_version >= '3.9.0'
+setuptools==84.2.1; python_version >= '3.10'
+six==1.17.0; python_version >= '2.7' and python_version != '3.0' and python_version != '3.1' and python_version != '3.2'
+sqlparse==0.6.0; python_version >= '3.10'
+tensorflow==2.21.0; python_version >= '3.10'
+termcolor==3.3.0; python_version >= '3.10'
+typing-extensions==4.16.0; python_version >= '3.9'
+urllib3==2.8.0; python_version >= '3.10'
+wheel==0.48.0; python_version >= '3.9'
+wrapt==2.5.1; python_version >= '3.9'

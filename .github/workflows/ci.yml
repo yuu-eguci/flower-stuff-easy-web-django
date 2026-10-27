@@ -23,7 +23,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    container: python:3.8-slim-bookworm
+    container: python:3.13-slim
     env:
       APP_HDF5_DRIVE_ID: dummy
       APP_HDF5_VERSION: dummy
@@ -33,6 +33,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - run: pip install pipenv==2024.0.1
+      - run: pip install pipenv==2026.10.3
       - run: pipenv install --deploy --system
+      - name: Check that requirements.txt matches Pipfile.lock
+        run: pipenv requirements | diff - requirements.txt
       - run: python manage.py test
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13'
+      - run: pip install pip-audit==2.10.1
+      - run: pip-audit --no-deps --disable-pip -r requirements.txt
