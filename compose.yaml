@@ -1,0 +1,16 @@
+services:
+  django:
+    build: .
+    ports:
+      - 127.0.0.1:8000:8000
+    # Defaults are dummy values for local development only.
+    environment:
+      APP_HDF5_DRIVE_ID: ${APP_HDF5_DRIVE_ID:-}
+      APP_HDF5_VERSION: ${APP_HDF5_VERSION:-local}
+      APP_PINCODE: ${APP_PINCODE:-1234}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-django-insecure-local-only}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/status')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
