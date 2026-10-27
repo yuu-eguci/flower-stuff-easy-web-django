@@ -34,7 +34,7 @@ def trim_base64_header(base64string: str) -> str:
 
 @functools.lru_cache(maxsize=1)
 def load_model(path: str):
-    # 読み込みに時間がかかるので、一度読んだモデルを使い回します。
+    # モデルの読み込みには時間がかかるため、一度読み込んだモデルを使い回します。
     return tensorflow.keras.models.load_model(path)
 
 
@@ -44,8 +44,8 @@ def predict_base64image(base64image: str) -> dict:
     # NOTE: header 入りの base64 データを base64.b64decode に投げると正しく decode できない。
     base64image = trim_base64_header(base64image)
 
-    # base64image をメモリ上の画像ファイルに変換します。
-    # 一時ファイルを使うと、同時に来たリクエスト同士で上書きしあってしまうためです。
+    # base64image をメモリ上の画像として読み込みます。
+    # 一時ファイルを使うと、同時に届いたリクエストが同じファイルを上書きするためです。
     image_file = io.BytesIO(base64.b64decode(base64image))
 
     # モデルをロードします。
@@ -72,7 +72,7 @@ def convert_image_for_prediction(image_path: str | io.BytesIO,
                                  verbose: bool) -> numpy.ndarray:
     """メチャクチャ苦労して、画像を prediction へ変換する処理を整理しました。
     Args:
-        image_path (str | io.BytesIO): 画像パス、またはメモリ上の画像ファイル。
+        image_path (str | io.BytesIO): 画像パスまたはメモリ上の画像ファイル。
         target_image_size (tuple): 変換後の画像サイズ。
         color_mode (str): 'rgb', 'rgba', 'grayscale'
         verbose (bool): 途中のロギングを行う。
