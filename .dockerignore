@@ -1,0 +1,9 @@
+.git
+.github
+docs
+scripts
+**/__pycache__
+**/*.py[cod]
+.env
+.venv
+temp_image

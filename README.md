@@ -16,6 +16,19 @@ Main packages: Django 5.2 LTS, TensorFlow 2.21 (Keras 3). `Pipfile` lists the pa
 > flower-stuff-easy-web-docker is archived and its container uses Python 3.8.
 > It works with this repository up to commit `e14760d` (Python 3.8, Django 3.2, TensorFlow 2.6), not with later commits.
 
+## Docker
+
+```bash
+docker compose up --build
+```
+
+- The API listens on [http://127.0.0.1:8000](http://127.0.0.1:8000) (published on `127.0.0.1` only).
+- It uses `config.settings.local` (`DEBUG=True`), so use it for local development only.
+- `compose.yaml` sets dummy values for `APP_PINCODE` (`1234`) and `DJANGO_SECRET_KEY`. Override them with environment variables if needed.
+- Put the trained model at `app/hdf5.hdf5` before building. Without it, `/api/v1/status` returns `{"ready": false}` and prediction fails.
+
+`./scripts/docker-smoke-test.sh` builds and starts the container, then checks `manage.py check`, `/api/v1/status` and a prediction with the test model. CI runs it too.
+
 ## Tests
 
 The settings read these environment variables, so set dummy values to run the tests:
@@ -30,5 +43,5 @@ The tests do not need the real model. `app/tests/fixtures/legacy_model.h5` is a 
 
 ## CI / Deployment
 
-- `.github/workflows/ci.yml` runs flake8, the tests and pip-audit on pull requests and on pushes to `main`. It also checks that `requirements.txt` matches `Pipfile.lock`. It uses no secrets and has read-only permissions.
+- `.github/workflows/ci.yml` runs flake8, the tests, pip-audit and the Docker smoke test on pull requests and on pushes to `main`. It also checks that `requirements.txt` matches `Pipfile.lock`. It uses no secrets and has read-only permissions.
 - `.github/workflows/lint-build-deploy-to-webapp.yml` deploys to Azure App Service. It runs only when started manually (`workflow_dispatch`); pushes to `main` no longer deploy. It still uses Python 3.8 and old actions, and is not maintained.
